@@ -1,4 +1,7 @@
 * SetDict
+[[https://pypi.python.org/pypi/setdict][https://img.shields.io/pypi/v/setdict.svg]]
+[[https://pypi.python.org/pypi/setdict][https://img.shields.io/pypi/pyversions/setdict.svg]]
+
 It's a dict; it's a set; it's a SetDict!
 
 It behaves exactly like a dict
