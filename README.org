@@ -1,0 +1,111 @@
+* SetDict
+It's a dict; it's a set; it's a SetDict!
+
+It behaves exactly like a dict
+#+BEGIN_SRC python
+  from setdict import SetDict
+
+  a = SetDict(a=3, b=2)
+  b = SetDict({"a": 3, "b": 2})
+
+  print(a) # => {'a': 3, 'b': 2}
+  print(a["a"]) # => 3
+  print({k: v + 1 for k, v in b.items()}) # => {'a': 4, 'b': 3}
+#+END_SRC
+
+It supports set operations as well. If there's ever a clash in values, the
+leftmost SetDict's value is used.
+
+#+BEGIN_SRC python
+  from setdict import SetDict
+
+  foo = SetDict(a=1, b=2, c=3)
+  bar = SetDict(b=3, c=4, d=5)
+
+  print(foo | bar) # => {'a': 1, 'b': 2, 'c': 3, 'd': 5}
+  print(foo & bar) # => {'b': 2, 'c': 3}
+  print(foo ^ bar) # => {'a': 1, 'd': 5}
+  print(foo - bar) # => {'a': 1}
+#+END_SRC
+
+SetDicts work with regular dictionaries and sets as well
+
+#+BEGIN_SRC python
+  from setdict import SetDict
+
+  foo = SetDict(a=1, b=2, c=3)
+  bar = dict(b=3, c=4, d=5)
+
+  print(foo | bar) # => {'a': 1, 'b': 2, 'c': 3, 'd': 5}
+  print(foo & bar) # => {'b': 2, 'c': 3}
+  print(foo ^ bar) # => {'a': 1, 'd': 5}
+  print(foo - bar) # => {'a': 1}
+
+  print(bar | foo) # => {'a': 1, 'b': 2, 'c': 3, 'd': 5}
+  print(bar & foo) # => {'b': 2, 'c': 3}
+  print(bar ^ foo) # => {'a': 1, 'd': 5}
+  print(bar - foo) # => {'a': 1}
+#+END_SRC
+
+Any set operation between a SetDict and a dict returns a SetDict, and operations
+between sets and SetDicts return sets where returning dicts wouldn't make any
+sense.
+
+#+BEGIN_SRC python
+  from setdict import SetDict
+
+  foo = SetDict(a=1, b=2, c=3)
+  bar = {'a', 'c', 'd'}
+
+  print(foo | bar) # => {'a', 'b', 'c', 'd'}
+  print(foo & bar) # => {'a': 1, 'c': 3}
+  print(foo ^ bar) # => {'b', 'd'}
+  print(foo - bar) # => {'b': 2}
+
+  print(bar | foo) # => {'a', 'b', 'c', 'd'}
+  print(bar & foo) # => {'a': 1, 'c': 3}
+  print(bar ^ foo) # => {'b', 'd'}
+  print(bar - foo) # => {'d'}
+#+END_SRC
+
+Here's an exhaustive list of what is returned when
+
+|                      | SetDict, SetDict | set, SetDict | SetDict, set |
+|----------------------+------------------+--------------+--------------|
+| Union                | SetDict          | set          | set          |
+| Intersection         | SetDict          | SetDict      | SetDict      |
+| Difference           | SetDict          | set          | SetDict      |
+| Symmetric Difference | SetDict          | set          | set          |
+
+Superset and subset operators, and set- and dict-equality are also supported
+
+#+BEGIN_SRC python
+  from setdict import SetDict
+
+  foo = SetDict(a=1, b=2, c=3)
+  bar = SetDict(a=2, b=3, c=4)
+  bar = {'a', 'b', 'c'}
+
+  print(foo == bar) # => False
+  print(foo == baz) # => True
+  print(bar == baz) # => True
+
+  print(foo >= bar) # => True
+  print(foo <= bar) # => True
+  print(foo > bar) # => False
+  print(foo < bar) # => False
+
+  print(foo >= baz) # => True
+  print(foo <= baz) # => True
+  print(foo > baz) # => False
+  print(foo < baz) # => False
+#+END_SRC
+
+SetDict supports:
+
+- Set operators <, <=, >, >=, &, |, ^, -, ==, !=
+- Compound assignments &=, |=, ^=, -=
+- Dictionary methods
+- Set methods
+- All aforementioned operations between SetDicts, sets, and dicts
+- Iteration
