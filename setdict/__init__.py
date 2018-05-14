@@ -1,1 +1,1 @@
-from setdict import SetDict
+from .setdict import SetDict
